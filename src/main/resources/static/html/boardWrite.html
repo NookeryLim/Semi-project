@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<meta charset="UTF-8">
+<title>Nook Inc . New Writing</title>
+<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/js/index.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#articleInputBtn').click( function(){
+		const id=document.cookie.slice(3);
+		const title=$('#articleTitle').val();
+		const content=$('#articleContent').val();
+		console.log(id + title + content);
+		$.post("../boardWrite",
+			{
+				id,
+			    title,
+			    content
+			},
+			function(data, status){
+				alert(data);
+				window.history.back();
+			}
+		);
+	});	
+});
+</script>
+</head>
+<body>
+<!-- <div style="border:2px solid #ccccff;margin:20px;padding-bottom: 20px;border-radius: 30px;"> -->
+<div><br>
+	<h1 style="text-align:center">New Writing</h1><br>
+	<!-- <form name="articleForm" method="post"   action="../boardWrite" enctype="application/x-www-form-urlencoded"> -->
+	  
+		<input type="hidden" name="sign" value="addArticle.do" > 
+		<table border="0" align="center">
+		<tr>
+			<td align="right">Title : </td>
+			<td colspan="2"><input type="text" size="70"  maxlength="500" name="title" id="articleTitle" /></td>
+		</tr>
+		<tr>
+			<td align="right" valign="top"><br>Content : </td>
+			<td colspan="2"><textarea name="content" rows="17" cols="72" maxlength="4000" id="articleContent"></textarea> </td>
+		</tr>
+		<tr>
+			<td align="right"> </td>
+			<td colspan="2">
+				<br><input type="submit" value="submit" id="articleInputBtn" style="margin-right: 10px" />
+				<input type=button value="Article list" onClick="window.history.back()" />
+			</td>
+		</tr>
+	    </table>
+  	<!-- </form> -->
+</div>
+</body>
+</html>

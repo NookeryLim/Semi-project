@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Nook Inc Member</title>
+<link rel="stylesheet" href="../css/style.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="/js/member.js" async="true"></script>
+<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+</head>
+<body>
+	<div class="wrap">
+		<div class="form-wrap">
+			<div class="button-wrap">
+				<div id="btn"></div>
+				<button type="button" class="togglebtn" onclick="login()">LOG IN</button>
+				<button type="button" class="togglebtn" onclick="register()">REGISTER</button>
+			</div>
+			<div class="social-icons">
+               	<img src="../img/fb.png" alt="facebook">
+               	<img src="../img/tw.png" alt="twitter">
+               	<img src="../img/gl.png" alt="google">
+			</div>
+           	<form id="login" action="" class="input-group">
+                <input type="text" class="input-field" id="log_id" placeholder="Enter ID" required>
+                <input type="password" class="input-field" id="log_pw" placeholder="Enter Password" required>
+                <button class="submit" id="loginBtn">Login</button>
+           	</form>
+           	<form id="register" action="" class="input-group">
+                <input type="text" class="input-field" id="reg_name" placeholder="Your Name" required>
+                <input type="text" class="input-field" id="reg_id" placeholder="Enter ID" required>
+                <input type="password" class="input-field" id="reg_pw" placeholder="Enter Password" required>
+                <button class="submit" id="registerBtn">register</button>
+           	</form>
+        </div>
+    </div>
+<script>
+        var x = document.getElementById("login");
+        var y = document.getElementById("register");
+        var z = document.getElementById("btn");
+        
+        function login(){
+            x.style.left = "50px";
+            y.style.left = "450px";
+            z.style.left = "0";
+        }
+
+        function register(){
+            x.style.left = "-400px";
+            y.style.left = "50px";
+            z.style.left = "110px";
+        }
+    </script>
+    
+</body>
+</html>

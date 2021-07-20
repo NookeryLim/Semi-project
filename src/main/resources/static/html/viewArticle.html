@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Nook Inc  View Article</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	const url = window.location.href;
+	//console.log(url);
+	const articleNO=url.split('=')[1];
+	//console.log(articleNO);
+	
+	$.get("../viewArticle",
+		{
+			articleNO
+		},
+		function(data,status){
+			//console.log(data);
+			data=JSON.parse(data);
+			//console.log(data);
+				
+			let tArticleNO='<input type="text" value="'+data.articleNO+'"size="67"  maxlength="500" name="title" id="tthisArticleNO" disabled="disabled" /><br><br>';
+			let tId='<input  type="text" size="67" value="'+data.id+'" maxlength="500" name="title" id="tthisId" disabled="disabled" /><br><br>';
+			let tTitle='<input type="text" value="'+data.title+'" size="67"  maxlength="500" name="title" id="tthisTitle" disabled="disabled" /><br><br>';
+			let tContent='<textarea name="content" rows="15" cols="69" maxlength="4000" id="tthisContent" disabled="disabled" >'+data.content+'</textarea><br><br>';
+				
+			$("#thisArticleNO").html(tArticleNO);
+			$("#thisId").html(tId);
+			$("#thisTitle").html(tTitle);
+			$("#thisContent").html(tContent);
+		}
+	);
+	
+	$("#replyBtn").click(function(){
+		const id=$.cookie("id");
+		if(id){
+			$('#replyWriterInput').val(id);
+			$("#replyDiv").css("display","block");
+		} else {
+			alert("login first");
+			location.reload();
+		}				
+	});
+	
+	$("#replyInsertBtn").click(function(){
+		const id=$("#replyWriterInput").val();
+		const title=$("#replyTitle").val();
+		const content=$("#replyContent").val();
+		const parentNO=articleNO;
+		//console.log(id +" : "+ title +" : "+ content +" : "+ parentNO)
+		$.post('../replyInsert',
+			{
+				id,
+				title,
+				content,
+				parentNO
+			},
+			function(data){
+				alert("reply complete.");
+				window.history.back();
+			}
+		);		
+	});
+	
+	$("#modBtn").click(function(){
+		const id=$.cookie("id");
+		const thisId=$('#tthisId').val();
+		//console.log(id+" : "+thisId);
+		if(id!=thisId){
+			alert("It's not your writing.");	
+			location.reload();
+			//location.replace("html/boardList.html");
+		} else {
+			result = confirm("Do you want to modify it?");
+			if(result){
+				$('#tthisTitle').attr('disabled',false);
+				$('#tthisContent').attr('disabled',false);
+				$("#modDiv").css("display","block");
+				$('#modBtn').attr('disabled',true);
+				
+				$("#modBtn2").click(function(){
+					const title=$("#tthisTitle").val();
+					const content=$("#tthisContent").val();
+					$.post('../modArticle',
+						{
+							articleNO,
+							title,
+							content
+						},
+						function(data){
+							alert("Article Modification Completed.");
+							window.history.back();
+						}
+					);
+				});
+			} 
+		}
+	}); 
+	 
+	$("#delBtn").click(function(){
+		const id=$.cookie("id");
+		const thisId=$('#tthisId').val();
+		//console.log(id+" : "+thisId);
+
+		if(id!=thisId){
+			alert("It's not your writing.");			
+			location.reload();
+		} else {
+			result = confirm("Are you sure you want to delete it?");
+			if(result){
+				$.post('../delArticle',
+					{
+						articleNO,
+					},
+					function(data){
+						alert("Article deleted.");
+						window.history.back();
+					}
+				);
+			}
+		}
+	}); 
+});//end ready
+
+</script> 	
+</head>
+<body>
+<h1 style="text-align:center">View Article</h1><br>
+	
+	<input type="hidden" id="articleNO" value='${vo.getArticleNO() }' > 
+  <table border="0" align="center">
+   <tr>
+  <td align="right">Article Number : </td>
+  <td colspan="2" id="thisArticleNO"></td>
+</tr>
+   <tr>
+  <td align="right">Writer : </td>
+  <td colspan="2" id="thisId"></td>
+</tr>
+   <tr>
+  <td align="right">Title : </td>
+  <td colspan="2" id="thisTitle"></td>
+</tr>
+<tr>
+<td align="right" valign="top"><br>Content : </td>
+<td colspan=2 id="thisContent"> </td>
+   </tr>
+<tr>
+   <td align="right"> </td>
+   <td colspan="2">
+      <input type="button" value="Modify" id="modBtn" style="margin-right: 10px"/>
+      <input type="button" value="Delete" id="delBtn" style="margin-right: 10px"/> 
+      <input type="button" value="Commenting" id="replyBtn" style="margin-right: 10px"/>  
+      <input type=button value="Article list" onClick="window.history.back()" style="margin-right: 10px" />
+   </td>
+   </tr>
+  </table>
+  <br>
+  <div style='padding:20px;display:none;background:#E0F8F7' id="replyDiv">
+  	<table>
+  		<tr><td>Reply Writer : </td><td><input id='replyWriterInput' disabled="disabled"></td></tr>
+  		<tr><td>Reply Title : </td><td><input id="replyTitle"></td></tr>
+  		<tr><td>Reply Content : </td><td><textarea rows='3' cols="65" id="replyContent"></textarea></td></tr>
+  	</table>
+  	<center><button id='replyInsertBtn'>Register Reply</button></center>
+  </div>
+  
+  <div style='padding:20px;display:none;' id="modDiv">
+  	<input type="button" value="Text Modified." id="modBtn2" />
+  </div>
+
+</body>
+</body>
+</html>
